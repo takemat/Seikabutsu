@@ -29,8 +29,8 @@ class PostController extends Controller
     public function store(Post $post, PostRequest $request) // 引数をRequestからPostRequestにする
     {
         $image_url = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-        dd($image_url);
         $input = $request['post'];
+        $input += ['image_url' => $image_url];
         $post->fill($input)->save();
         return redirect('/posts/' . $post->id);
     }
