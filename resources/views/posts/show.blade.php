@@ -19,6 +19,17 @@
             <div>
             <img src="{{ $post->image_url }}" alt="画像が読み込めません。"/>
             </div>
+            <form method="post" action="{{ route('comments.store') }}">
+            @csrf
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
+            <textarea name="body" required></textarea>
+            <button type="submit">コメントする</button>
+            </form>
+            
+            @foreach ($post->comments as $comment)
+                <p>{{ $comment->body }}</p>
+            @endforeach
+            
         </div>
         <div class="edit"><a href="/posts/{{ $post->id }}/edit">edit</a></div>
         <div class="footer">
