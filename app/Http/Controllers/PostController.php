@@ -13,7 +13,8 @@ class PostController extends Controller
 {
     public function index(Post $post)
     {
-        return view('posts.index')->with(['posts' => $post->getPaginateByLimit()]);
+        $rankings = Post::withCount('likes')->orderBy("likes_count","DESC")->limit(5)->get();
+        return view('posts.index')->with(['rankings'=>$rankings,'posts' => $post->getPaginateByLimit()]);
     }
 
     public function show(Post $post)
@@ -29,6 +30,7 @@ class PostController extends Controller
     public function store(Post $post, PostRequest $request) // 引数をRequestからPostRequestにする
     {
         $image_url = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+        $post->user_id = \Auth::id();
         $input = $request['post'];
         $input += ['image_url' => $image_url];
         $post->fill($input)->save();
