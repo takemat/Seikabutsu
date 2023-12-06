@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
 
 class Post extends Model
 {
@@ -17,8 +18,14 @@ class Post extends Model
     
     public function getPaginateByLimit(int $limit_count = 5)
     {
-        return $this::withCount('likes')->orderBy('updated_at', 'DESC')->paginate($limit_count);
+        return $this::with('category')->orderBy('updated_at', 'DESC')->paginate($limit_count);
     }
+    
+    public function countlikes()
+    {
+        return $this::withCount('likes');
+    }
+    
     public function likes()
     {
         return $this->hasMany('App\Models\Like');
@@ -32,5 +39,9 @@ class Post extends Model
     public function comments()   
     {
         return $this->hasMany(Comment::class);  
+    }
+    public function category()   
+    {
+        return $this->belongsTo(Category::class);  
     }
 }
