@@ -19,8 +19,10 @@ class PostController extends Controller
     }
 
     public function show(Post $post)
-    {
-        return view('posts.show')->with(['post' => $post]);
+    {   
+        $api_key = config('app.api_key');
+    
+        return view('posts.show')->with(['post' => $post, 'api_key' => $api_key]);
     }
 
     public function create(Category $category)
@@ -34,6 +36,30 @@ class PostController extends Controller
         $post->user_id = \Auth::id();
         $input = $request['post'];
         $input += ['image_url' => $image_url];
+        
+        $apiKey = config('app.api_key');
+                $search = $request['name'];  // 検索ワードを設定
+        
+        // Google Places APIのURLを構築
+        $url = sprintf(
+            "https://maps.googleapis.com/maps/api/place/textsearch/json?query=%s&key=%s",
+            urlencode($search),
+            $apiKey
+        );
+        
+        // cURLを使用してAPIリクエストを送信
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        // JSONレスポンスを配列にデコード
+        $places = json_decode($response, true)['results'];
+        $place = $places[0];
+        $post->latitude=$place['geometry']['location']['lat'];
+        $post->longitude=$place['geometry']['location']['lng'];
+        
         $post->fill($input)->save();
         return redirect('/posts/' . $post->id);
     }
@@ -76,5 +102,6 @@ public function like(Request $request)
         'post_likes_count' => $post_likes_count,
     ];
     return response()->json($param); // JSONデータをjQueryに返す
-}
-}
+    }
+        
+    }

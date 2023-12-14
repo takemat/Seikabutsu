@@ -14,11 +14,12 @@ class Post extends Model
         'title',
         'body',
         'image_url',
+        'category_id',
     ];
     
     public function getPaginateByLimit(int $limit_count = 5)
     {
-        return $this::with('category')->orderBy('updated_at', 'DESC')->paginate($limit_count);
+        return $this::with('category')->withCount('likes')->orderBy('updated_at', 'DESC')->paginate($limit_count);
     }
     
     public function countlikes()

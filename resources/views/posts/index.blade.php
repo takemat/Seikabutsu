@@ -4,8 +4,9 @@
         <div class='posts'>
             @foreach ($posts as $post)
                 <div class='post'>
-                    <h2 class='title'>
-    <a href="/posts/{{ $post->id }}">{{ $post->title }}</a> </h2>
+                    <h2 class='title text-2xl m-3 bg-red-300'>
+                        <a href="/posts/{{ $post->id }}">{{ $post->title }}</a>
+                    </h2>
                     <p class='body'>{{ $post->body }}</p>
                     <!-- Post.phpに作ったisLikedByメソッドをここで使用 -->
                     @if (!$post->isLikedBy(Auth::user()))
@@ -69,5 +70,5 @@
         }
     }
 </script>
-<a href="">{{ $post->category->name }}</a>
+
  </x-app-layout>

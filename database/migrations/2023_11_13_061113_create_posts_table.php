@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
              $table->foreignId('category_id')->constrained()->onDelete('cascade');
+             $table->decimal('latitude', 10, 8);
+             $table->decimal('longitude', 11, 8);
         });
     }
 

@@ -17,14 +17,16 @@ class CategorySeeder extends Seeder
     public function run()
     {
         DB::table('categories')->insert([
-                'name' => '関東',
-         ],
-         [
-                'name' => '関西',
-         ],
-         [
-                'name' => '近畿',
-         ],
-         );
+            'name' => '関東'
+        ]);
+        DB::table('categories')->insert([
+            'name' => '中部'
+        ]);
+        DB::table('categories')->insert([
+            'name' => '近畿'
+        ]);
+        DB::table('categories')->insert([
+            'name' => '四国'
+        ]);
     }
 }
