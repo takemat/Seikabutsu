@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('body',200);
             $table->string('image_url');
             $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+             $table->foreignId('category_id')->constrained()->onDelete('cascade');
+             $table->decimal('latitude', 10, 8);
+             $table->decimal('longitude', 11, 8);
         });
     }
 

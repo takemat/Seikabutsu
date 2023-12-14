@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
-
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,9 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
-
-Route::get('/posts/create', [PostController::class, 'create']);
-Route::post('/posts', [PostController::class, 'store']);
-Route::get('/posts/{post}', [PostController::class, 'show']);
+Route::resource('comments', CommentController::class)->only(['store']);
 
 require __DIR__.'/auth.php';

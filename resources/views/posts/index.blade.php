@@ -4,6 +4,39 @@
         <div class='posts'>
             @foreach ($posts as $post)
                 <div class='post'>
+                    <h2 class='title text-2xl m-3 bg-red-300'>
+                        <a href="/posts/{{ $post->id }}">{{ $post->title }}</a>
+                    </h2>
+                    <p class='body'>{{ $post->body }}</p>
+                    <!-- Post.phpに作ったisLikedByメソッドをここで使用 -->
+                    @if (!$post->isLikedBy(Auth::user()))
+                        <span class="likes">
+                            <i class="fas fa-heart like-toggle" data-post-id="{{ $post->id }}"></i>
+                        <span class="like-counter">{{$post->likes_count}}</span>
+                        </span><!-- /.likes -->
+                    @else
+                        <span class="likes">
+                            <i class="fas fa-heart heart like-toggle liked" data-post-id="{{ $post->id }}"></i>
+                        <span class="like-counter">{{$post->likes_count}}</span>
+                        </span><!-- /.likes -->
+                    @endif
+                    @if (auth()->id() == $post->user_id)
+                        <form action="/posts/{{ $post->id }}" id="form_{{ $post->id }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="deletePost({{ $post->id }})">削除</button> 
+                        </form>
+                    @endif
+                </div>
+            @endforeach
+            {{ Auth::user()->name }}
+        </div>
+        <div class='paginate'>
+            {{ $posts->links() }}
+        </div>
+        <h1>読者ランキング</h1>
+        @foreach ($rankings as $post)
+                <div class='post'>
                     <h2 class='title'>
     <a href="/posts/{{ $post->id }}">{{ $post->title }}</a> </h2>
                     <p class='body'>{{ $post->body }}</p>
@@ -19,18 +52,16 @@
                         <span class="like-counter">{{$post->likes_count}}</span>
                         </span><!-- /.likes -->
                     @endif
-                    <form action="/posts/{{ $post->id }}" id="form_{{ $post->id }}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" onclick="deletePost({{ $post->id }})">delete</button> 
+                    @if (auth()->id() == $post->user_id)
+                        <form action="/posts/{{ $post->id }}" id="form_{{ $post->id }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="deletePost({{ $post->id }})">削除</button> 
+                        </form>
+                    @endif
                 </div>
             @endforeach
-            {{ Auth::user()->name }}
-        </div>
-        <div class='paginate'>
-            {{ $posts->links() }}
-        </div>
-        <script>
+             <script>
     function deletePost(id) {
         'use strict'
 
@@ -39,4 +70,5 @@
         }
     }
 </script>
+
  </x-app-layout>
